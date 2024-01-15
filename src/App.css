@@ -1,0 +1,18 @@
+#root {
+    min-height: 100vh;
+}
+
+.color {
+    min-width: 200px;
+    min-height: 200px;
+    border: 1px solid grey;
+    outline: unset;
+    padding: 0;
+}
+
+.shadow {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.shadow2 {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 22px 70px 4px;
+}

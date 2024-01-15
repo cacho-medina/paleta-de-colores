@@ -1,8 +1,4 @@
-# React + Vite
+# Paleta de Colores
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+La funcion principal es la de agregar tus colores favoritos. La app permite la entrada de colores utilizando su nombre,
+codigo hexadecimal o codigo rgb, ademas muestra una previsualizacion del color ingresado.

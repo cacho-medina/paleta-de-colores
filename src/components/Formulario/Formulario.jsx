@@ -1,27 +1,75 @@
 import Color from "../Color/Color";
 import Cards from "../Cards/Cards";
 import { useEffect, useState } from "react";
+import {
+    getColors,
+    saveColor,
+    editColor,
+    deleteColor,
+} from "../../helpers/queries";
 
 function Formulario() {
-    const info = JSON.parse(localStorage.getItem("colores")) || [];
-    const [color, setColor] = useState("");
-    const [colores, setColores] = useState(info);
+    const [color, setColor] = useState({
+        nombre: "",
+        codigoHex: "",
+    });
+    const [colores, setColores] = useState([]);
+    const [edit, setEdit] = useState(false);
 
     const handleChange = (e) => {
-        setColor(e.target.value);
+        setColor({ ...color, [e.target.name]: e.target.value });
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-        setColores([...colores, color]);
-        setColor("");
+        if (!color.nombre.length) {
+            alert("ingrese el nombre del color!!");
+        } else {
+            guardarColor(color);
+            setColor({ nombre: "", codigoHex: "" });
+        }
     };
-    function deleteColor(color) {
-        const filtered = colores.filter((item) => item !== color);
-        setColores(filtered);
+    async function borrarColor(id) {
+        const res = await deleteColor(id);
+        if (!res.ok) {
+            alert("Error al borrar el color");
+        }
+        obtenerColores();
     }
+    async function editarColor(color) {
+        const res = await editColor(color, color._id);
+        if (!res.ok) {
+            alert("error al editar el color");
+        }
+        setEdit(false);
+        obtenerColores();
+    }
+    async function guardarColor(color) {
+        if (edit) {
+            editarColor(color);
+        } else {
+            const res = await saveColor(color);
+            if (!res.ok) {
+                alert("Error al guardar el color");
+            }
+            obtenerColores();
+        }
+    }
+    async function obtenerColores() {
+        const res = await getColors();
+        if (res.ok) {
+            const lista = await res.json();
+            setColores(lista);
+        }
+    }
+
+    function enableEdit(edit) {
+        setEdit(true);
+        setColor(edit);
+    }
+
     useEffect(() => {
-        localStorage.setItem("colores", JSON.stringify(colores));
-    }, [colores]);
+        obtenerColores();
+    }, []);
     return (
         <>
             <form
@@ -32,26 +80,34 @@ function Formulario() {
                     <Color color={color}></Color>
                     <div>
                         <input
-                            value={color}
+                            value={color.nombre}
                             className="form-control"
-                            name="color"
+                            name="nombre"
                             type="text"
                             placeholder="Ingrese un color ej. Blue"
                             onChange={handleChange}
                         />
-                        <label className="text-light">
-                            <small>
-                                Otras formas de agregar colores '#000' o
-                                'rgb(0,0,0)'
-                            </small>
-                        </label>
+                        <input
+                            value={color.codigoHex}
+                            className="form-control mt-2"
+                            name="codigoHex"
+                            type="text"
+                            placeholder="Ingrese un codigo hexadecimal ej. #fff o #ffffff"
+                            onChange={handleChange}
+                        />
                     </div>
                 </div>
                 <button className="btn btn-outline-secondary align-self-center">
                     Guardar
                 </button>
             </form>
-            <Cards colores={colores} deleteColor={deleteColor}></Cards>
+            <Cards
+                colores={colores}
+                borrarColor={borrarColor}
+                obtenerColores={obtenerColores}
+                enableEdit={enableEdit}
+                setColores={setColores}
+            ></Cards>
         </>
     );
 }

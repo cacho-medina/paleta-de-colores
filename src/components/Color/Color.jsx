@@ -3,7 +3,7 @@ function Color({ color }) {
         <>
             <div
                 style={{
-                    backgroundColor: `${color}`,
+                    backgroundColor: `${color.codigoHex}`,
                 }}
                 className="color"
             ></div>
